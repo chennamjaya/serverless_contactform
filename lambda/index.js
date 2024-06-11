@@ -1,6 +1,9 @@
 const AWS = require('aws-sdk');
 const ses = new AWS.SES({ region: 'us-east-1' });
-
+const headers = {'Content-Type':'application/json',
+    'Access-Control-Allow-Origin':'*',
+    'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS'}
+    
 exports.handler = async (event) => {
     if (event.httpMethod === 'OPTIONS') {
         return {
