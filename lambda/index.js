@@ -2,6 +2,17 @@ const AWS = require('aws-sdk');
 const ses = new AWS.SES({ region: 'us-east-1' }); // Update to your region
 
 exports.handler = async (event) => {
+    const response = {
+        statusCode: 200,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+        },
+        body: JSON.stringify({
+            message: 'Message sent successfully!',
+        }),
+    };
     const { name, email, message } = JSON.parse(event.body);
 
     const params = {
