@@ -4,6 +4,7 @@
     "description": "",
     "main": "index.js",
     "dependencies": {
-        "aws-sdk": "^2.953.0"
+        "aws-sdk": "^2.953.0",
+        "cors": "^2.8.5"
     }
 }
