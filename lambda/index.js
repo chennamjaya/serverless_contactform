@@ -2,21 +2,19 @@ const AWS = require('aws-sdk');
 const ses = new AWS.SES({ region: 'us-east-1' });
 
 exports.handler = async (event) => {
-    // Handle preflight requests
     if (event.httpMethod === 'OPTIONS') {
         return {
             statusCode: 200,
             headers: {
-                'Access-Control-Allow-Origin': '*', // Allow all origins or specify your origin
+                'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'POST, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Max-Age': '3600' // Cache preflight response for 1 hour
+                'Access-Control-Max-Age': '3600', // Cache for 1 hour
             },
             body: '',
         };
     }
 
-    // Handle actual POST request
     if (event.httpMethod === 'POST') {
         const { name, email, message } = JSON.parse(event.body);
 
@@ -44,7 +42,7 @@ exports.handler = async (event) => {
             return {
                 statusCode: 200,
                 headers: {
-                    'Access-Control-Allow-Origin': '*', // Allow all origins or specify your origin
+                    'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST, OPTIONS',
                     'Access-Control-Allow-Headers': 'Content-Type',
                 },
@@ -55,7 +53,7 @@ exports.handler = async (event) => {
             return {
                 statusCode: 500,
                 headers: {
-                    'Access-Control-Allow-Origin': '*', // Allow all origins or specify your origin
+                    'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST, OPTIONS',
                     'Access-Control-Allow-Headers': 'Content-Type',
                 },
@@ -64,11 +62,10 @@ exports.handler = async (event) => {
         }
     }
 
-    // Fallback for unsupported methods
     return {
         statusCode: 405,
         headers: {
-            'Access-Control-Allow-Origin': '*', // Allow all origins or specify your origin
+            'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'POST, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type',
         },
