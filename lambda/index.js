@@ -1,64 +1,77 @@
 const AWS = require('aws-sdk');
 const ses = new AWS.SES({ region: 'us-east-1' });
-const headers = {'Content-Type':'application/json',
-    'Access-Control-Allow-Origin':'*',
-    'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS'}
-    
+
 exports.handler = async (event) => {
+    // Handle preflight requests
     if (event.httpMethod === 'OPTIONS') {
         return {
             statusCode: 200,
             headers: {
-                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Origin': '*', // Allow all origins or specify your origin
                 'Access-Control-Allow-Methods': 'POST, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Max-Age': '3600' // Cache preflight response for 1 hour
             },
             body: '',
         };
     }
 
-    const { name, email, message } = JSON.parse(event.body);
+    // Handle actual POST request
+    if (event.httpMethod === 'POST') {
+        const { name, email, message } = JSON.parse(event.body);
 
-    const params = {
-        Destination: {
-            ToAddresses: ['chennamjaya@gmail.com'], // Replace with your verified email address
-        },
-        Message: {
-            Body: {
-                Text: {
+        const params = {
+            Destination: {
+                ToAddresses: ['chennamjaya@gmail.com'], // Replace with your verified email address
+            },
+            Message: {
+                Body: {
+                    Text: {
+                        Charset: 'UTF-8',
+                        Data: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+                    },
+                },
+                Subject: {
                     Charset: 'UTF-8',
-                    Data: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+                    Data: 'New Contact Form Submission',
                 },
             },
-            Subject: {
-                Charset: 'UTF-8',
-                Data: 'New Contact Form Submission',
-            },
-        },
-        Source: 'chennamjaya@gmail.com', // Replace with your verified email address
-    };
+            Source: 'chennamjaya@gmail.com', // Replace with your verified email address
+        };
 
-    try {
-        await ses.sendEmail(params).promise();
-        return {
-            statusCode: 200,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type',
-            },
-            body: JSON.stringify({ message: 'Message sent successfully!' }),
-        };
-    } catch (error) {
-        console.error(error);
-        return {
-            statusCode: 500,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type',
-            },
-            body: JSON.stringify({ message: 'Failed to send message.' }),
-        };
+        try {
+            await ses.sendEmail(params).promise();
+            return {
+                statusCode: 200,
+                headers: {
+                    'Access-Control-Allow-Origin': '*', // Allow all origins or specify your origin
+                    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type',
+                },
+                body: JSON.stringify({ message: 'Message sent successfully!' }),
+            };
+        } catch (error) {
+            console.error(error);
+            return {
+                statusCode: 500,
+                headers: {
+                    'Access-Control-Allow-Origin': '*', // Allow all origins or specify your origin
+                    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type',
+                },
+                body: JSON.stringify({ message: 'Failed to send message.' }),
+            };
+        }
     }
+
+    // Fallback for unsupported methods
+    return {
+        statusCode: 405,
+        headers: {
+            'Access-Control-Allow-Origin': '*', // Allow all origins or specify your origin
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+        },
+        body: JSON.stringify({ message: 'Method Not Allowed' }),
+    };
 };
