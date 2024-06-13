@@ -2,6 +2,8 @@ const AWS = require('aws-sdk');
 const ses = new AWS.SES({ region: 'us-east-1' });
 
 exports.handler = async (event) => {
+    console.log("Received event:", JSON.stringify(event, null, 2));
+
     if (event.httpMethod === 'OPTIONS') {
         return {
             statusCode: 200,
@@ -9,35 +11,47 @@ exports.handler = async (event) => {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'POST, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Max-Age': '3600', // Cache for 1 hour
             },
             body: '',
         };
     }
 
     if (event.httpMethod === 'POST') {
-        const { name, email, message } = JSON.parse(event.body);
-
-        const params = {
-            Destination: {
-                ToAddresses: ['chennamjaya@gmail.com'], // Replace with your verified email address
-            },
-            Message: {
-                Body: {
-                    Text: {
-                        Charset: 'UTF-8',
-                        Data: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
-                    },
+        if (!event.body) {
+            console.error("Error: No body in the request");
+            return {
+                statusCode: 400,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type',
                 },
-                Subject: {
-                    Charset: 'UTF-8',
-                    Data: 'New Contact Form Submission',
-                },
-            },
-            Source: 'chennamjaya@gmail.com', // Replace with your verified email address
-        };
+                body: JSON.stringify({ message: 'Invalid request, no body found' }),
+            };
+        }
 
         try {
+            const { name, email, message } = JSON.parse(event.body);
+
+            const params = {
+                Destination: {
+                    ToAddresses: ['chennamjaya@gmail.com'], // Replace with your verified email address
+                },
+                Message: {
+                    Body: {
+                        Text: {
+                            Charset: 'UTF-8',
+                            Data: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+                        },
+                    },
+                    Subject: {
+                        Charset: 'UTF-8',
+                        Data: 'New Contact Form Submission',
+                    },
+                },
+                Source: 'chennamjaya@gmail.com', // Replace with your verified email address
+            };
+
             await ses.sendEmail(params).promise();
             return {
                 statusCode: 200,
@@ -49,7 +63,7 @@ exports.handler = async (event) => {
                 body: JSON.stringify({ message: 'Message sent successfully!' }),
             };
         } catch (error) {
-            console.error(error);
+            console.error("Error sending email:", error);
             return {
                 statusCode: 500,
                 headers: {
@@ -63,7 +77,7 @@ exports.handler = async (event) => {
     }
 
     return {
-        statusCode: 405,
+        statusCode: 405, // Method Not Allowed
         headers: {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'POST, OPTIONS',
