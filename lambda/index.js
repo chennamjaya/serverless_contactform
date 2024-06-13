@@ -86,3 +86,31 @@ exports.handler = async (event) => {
         body: JSON.stringify({ message: 'Method Not Allowed' }),
     };
 };
+
+fetch('https://your-api-endpoint-url/dev/contact', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Origin': 'http://example.com' // Replace with your actual origin URL
+    },
+    body: JSON.stringify({
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      message: 'Hello!'
+    }),
+    mode: 'cors', // Ensures CORS headers are handled correctly
+    credentials: 'include' // Includes cookies and other credentials in the request
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json(); // Assuming response is JSON
+    })
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  
