@@ -4,9 +4,7 @@ const ses = new AWS.SES({ region: 'us-east-1' });
 
 // Initialize the CORS middleware
 const corsHandler = cors({
-    origin: '*',
-    methods: ['POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Origin']
+
 });
 
 exports.handler = async (event, context, callback) => {
@@ -20,7 +18,7 @@ exports.handler = async (event, context, callback) => {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type, Origin',
+                    'Access-Control-Allow-Headers': 'Content-Type', 
                     'Access-Control-Max-Age': '86400'
                 },
                 body: ''
@@ -37,7 +35,7 @@ exports.handler = async (event, context, callback) => {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type, Origin'
+                    'Access-Control-Allow-Headers': 'Content-Type'
                 },
                 body: JSON.stringify({ message: 'Invalid request, no body found' })
             };
@@ -71,7 +69,7 @@ exports.handler = async (event, context, callback) => {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type, Origin'
+                    'Access-Control-Allow-Headers': 'Content-Type'
                 },
                 body: JSON.stringify({ message: 'Message sent successfully!' })
             };
@@ -82,7 +80,7 @@ exports.handler = async (event, context, callback) => {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type, Origin'
+                    'Access-Control-Allow-Headers': 'Content-Type'
                 },
                 body: JSON.stringify({ message: 'Failed to send message.' })
             };
@@ -94,7 +92,7 @@ exports.handler = async (event, context, callback) => {
         headers: {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Origin'
+            'Access-Control-Allow-Headers': 'Content-Type'
         },
         body: JSON.stringify({ message: 'Method Not Allowed' })
     };
