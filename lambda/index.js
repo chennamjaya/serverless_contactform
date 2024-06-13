@@ -8,7 +8,7 @@ exports.handler = async (event) => {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                'Access-Control-Allow-Headers': '*',
+                'Access-Control-Allow-Headers': 'Content-Type',
                 'Access-Control-Max-Age': '3600', // Cache for 1 hour
             },
             body: '',
@@ -44,7 +44,7 @@ exports.handler = async (event) => {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': '*',
+                    'Access-Control-Allow-Headers': 'Content-Type',
                 },
                 body: JSON.stringify({ message: 'Message sent successfully!' }),
             };
@@ -55,7 +55,7 @@ exports.handler = async (event) => {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': '*',
+                    'Access-Control-Allow-Headers': 'Content-Type',
                 },
                 body: JSON.stringify({ message: 'Failed to send message.' }),
             };
@@ -67,7 +67,7 @@ exports.handler = async (event) => {
         headers: {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': '*',
+            'Access-Control-Allow-Headers': 'Content-Type',
         },
         body: JSON.stringify({ message: 'Method Not Allowed' }),
     };
