@@ -20,7 +20,8 @@ exports.handler = async (event, context, callback) => {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type, Origin'
+                    'Access-Control-Allow-Headers': 'Content-Type, Origin',
+                    'Access-Control-Max-Age': '86400'
                 },
                 body: ''
             });
