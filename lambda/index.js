@@ -1,26 +1,33 @@
 const AWS = require('aws-sdk');
-const ses = new AWS.SES({ region: 'us-east-1' });
 const cors = require('cors');
+const ses = new AWS.SES({ region: 'us-east-1' });
 
-app.use(cors({
-    origin: "*"
-}));
+// Initialize the CORS middleware
+const corsHandler = cors({
+    origin: '*',
+    methods: ['POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Origin']
+});
 
-exports.handler = async (event) => {
+exports.handler = async (event, context, callback) => {
     console.log("Received event:", JSON.stringify(event, null, 2));
 
+    // Handle CORS preflight request
     if (event.httpMethod === 'OPTIONS') {
-        return {
-            statusCode: 200,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type, Origin',
-            },
-            body: '',
-        };
+        return corsHandler(event, context, () => {
+            callback(null, {
+                statusCode: 200,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type, Origin'
+                },
+                body: ''
+            });
+        });
     }
 
+    // Handle POST request
     if (event.httpMethod === 'POST') {
         if (!event.body) {
             console.error("Error: No body in the request");
@@ -29,9 +36,9 @@ exports.handler = async (event) => {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type, Origin',
+                    'Access-Control-Allow-Headers': 'Content-Type, Origin'
                 },
-                body: JSON.stringify({ message: 'Invalid request, no body found' }),
+                body: JSON.stringify({ message: 'Invalid request, no body found' })
             };
         }
 
@@ -40,21 +47,21 @@ exports.handler = async (event) => {
 
             const params = {
                 Destination: {
-                    ToAddresses: ['chennamjaya@gmail.com'], // Replace with your verified email address
+                    ToAddresses: ['chennamjaya@gmail.com'] // Replace with your verified email address
                 },
                 Message: {
                     Body: {
                         Text: {
                             Charset: 'UTF-8',
-                            Data: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
-                        },
+                            Data: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`
+                        }
                     },
                     Subject: {
                         Charset: 'UTF-8',
-                        Data: 'New Contact Form Submission',
-                    },
+                        Data: 'New Contact Form Submission'
+                    }
                 },
-                Source: 'chennamjaya@gmail.com', // Replace with your verified email address
+                Source: 'chennamjaya@gmail.com' // Replace with your verified email address
             };
 
             await ses.sendEmail(params).promise();
@@ -63,9 +70,9 @@ exports.handler = async (event) => {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type, Origin',
+                    'Access-Control-Allow-Headers': 'Content-Type, Origin'
                 },
-                body: JSON.stringify({ message: 'Message sent successfully!' }),
+                body: JSON.stringify({ message: 'Message sent successfully!' })
             };
         } catch (error) {
             console.error("Error sending email:", error);
@@ -74,9 +81,9 @@ exports.handler = async (event) => {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type, Origin',
+                    'Access-Control-Allow-Headers': 'Content-Type, Origin'
                 },
-                body: JSON.stringify({ message: 'Failed to send message.' }),
+                body: JSON.stringify({ message: 'Failed to send message.' })
             };
         }
     }
@@ -86,8 +93,8 @@ exports.handler = async (event) => {
         headers: {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Origin',
+            'Access-Control-Allow-Headers': 'Content-Type, Origin'
         },
-        body: JSON.stringify({ message: 'Method Not Allowed' }),
+        body: JSON.stringify({ message: 'Method Not Allowed' })
     };
 };
