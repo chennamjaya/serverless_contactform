@@ -10,7 +10,7 @@ exports.handler = async (event) => {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Headers': 'Content-Type, Origin',
             },
             body: '',
         };
@@ -24,7 +24,7 @@ exports.handler = async (event) => {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type',
+                    'Access-Control-Allow-Headers': 'Content-Type, Origin',
                 },
                 body: JSON.stringify({ message: 'Invalid request, no body found' }),
             };
@@ -58,7 +58,7 @@ exports.handler = async (event) => {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type',
+                    'Access-Control-Allow-Headers': 'Content-Type, Origin',
                 },
                 body: JSON.stringify({ message: 'Message sent successfully!' }),
             };
@@ -69,7 +69,7 @@ exports.handler = async (event) => {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type',
+                    'Access-Control-Allow-Headers': 'Content-Type, Origin',
                 },
                 body: JSON.stringify({ message: 'Failed to send message.' }),
             };
@@ -81,7 +81,7 @@ exports.handler = async (event) => {
         headers: {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Headers': 'Content-Type, Origin',
         },
         body: JSON.stringify({ message: 'Method Not Allowed' }),
     };
