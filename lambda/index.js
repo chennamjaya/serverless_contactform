@@ -2,6 +2,21 @@ const AWS = require('aws-sdk');
 const SES = new AWS.SES();
 
 exports.handler = async (event) => {
+    // Handle preflight OPTIONS requests
+    if (event.httpMethod === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST'
+            },
+            isBase64Encoded: false,
+            body: JSON.stringify({ message: 'CORS preflight handled' }),
+        };
+    }
+
     const { name, email, message } = JSON.parse(event.body);
 
     const params = {
@@ -26,19 +41,23 @@ exports.handler = async (event) => {
         return {
             statusCode: 200,
             headers: {
+                'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Headers': 'Content-Type',
             },
-            body: JSON.stringify({ message: 'Email sent successfully' }),
+            isBase64Encoded: false,
+            body: JSON.stringify({ message: 'Message sent successfully!' }),
         };
     } catch (error) {
         return {
             statusCode: 500,
             headers: {
+                'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Headers': 'Content-Type',
             },
-            body: JSON.stringify({ message: 'Failed to send email', error }),
+            isBase64Encoded: false,
+            body: JSON.stringify({ message: 'Failed to send message', error }),
         };
     }
 };
