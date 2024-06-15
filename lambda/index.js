@@ -5,7 +5,7 @@ exports.handler = async (event) => {
     // Handle preflight OPTIONS requests
     if (event.httpMethod === 'OPTIONS') {
         return {
-            statusCode: 200,
+            statusCode: 204,
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
